@@ -3,7 +3,7 @@ import sys
 
 from PyQt5.QtCore import QUrl, pyqtSlot
 from PyQt5.QtQuick import QQuickView
-from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
 from .cellular_field import CellularField
 from . import games

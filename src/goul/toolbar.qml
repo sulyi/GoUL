@@ -32,6 +32,8 @@ ToolBar {
 
         ComboBox {
             objectName: "game_type_combo"
+
+            # FIXME: get game names dynamically
             model: mainWindow.get_game_types()
             onCurrentTextChanged: {
                 mainWindow.set_game_type(currentText)

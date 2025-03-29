@@ -10,6 +10,7 @@ from .cellular_field import CellularField
 from .games import default_game, get_game_names
 
 logger = logging.getLogger()
+logger.addHandler(logging.StreamHandler())
 
 class GoULMainWindow(QMainWindow):
     game_types_changed = pyqtSignal()
@@ -52,11 +53,12 @@ class GoULMainWindow(QMainWindow):
 
     @pyqtSlot()
     def update_plot(self):
+        logger.info("Updating plot...")
         self.cf.update_plot()
 
     @pyqtSlot(str)
     def set_game_type(self, game_type):
-        print(f"Selected game type: {game_type}")
+        logger.info("Selected game type: %s", game_type)
         # Update the game type in your CellularField or Game class
 
     @pyqtProperty(QVariant, notify=game_types_changed)

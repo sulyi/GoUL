@@ -3,13 +3,13 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.11
 
 ToolBar {
-    objectName: "actions_toolBar"
+    id: toolbar
 
     RowLayout {
         width: parent.width
 
         ToolButton {
-            objectName: "draw_btn"
+            id: drawBtn
             display: AbstractButton.IconOnly
             icon.name: "insert-image"
             onClicked: {
@@ -19,20 +19,20 @@ ToolBar {
         }
 
         ToolButton {
-            objectName: "clear_btn"
+            id: clearBtn
             display: AbstractButton.IconOnly
             icon.name: "edit-clear"
         }
 
         ToolButton {
-            objectName: "random_btn"
+            id: randomBtn
             display: AbstractButton.IconOnly
             icon.name: "view-refresh"
         }
 
         // FIXME: too small dropdown
         ComboBox {
-            objectName: "game_type_combo"
+            id: gameTypeCombo
             model: toolbar ? toolbar.game_type_names : []
             onCurrentTextChanged: {
                 toolbar ? toolbar.set_game_type(currentText) : undefined
@@ -44,7 +44,7 @@ ToolBar {
         }
 
         ToolButton {
-            objectName: "start_stop_btn"
+            id: playToggleBtn
             display: AbstractButton.IconOnly
             icon.name: "media-playback-start"
         }

@@ -19,19 +19,20 @@ class GoULMainWindow(QMainWindow):
         layout = QVBoxLayout(central_widget)
 
         # Create the QQuickView for the QML toolbar
-        view = QQuickView()
-        view.setResizeMode(QQuickView.SizeRootObjectToView)
-        context = view.rootContext()
+        toolbar_view = QQuickView()
+        toolbar_view.setResizeMode(QQuickView.SizeRootObjectToView)
+        context = toolbar_view.rootContext()
         context.setContextProperty("mainWindow", self)
 
         qml_file = os.path.join(os.path.dirname(__file__), 'toolbar.qml')
-        view.setSource(QUrl.fromLocalFile(os.path.abspath(qml_file)))
+        toolbar_view.setSource(QUrl.fromLocalFile(os.path.abspath(qml_file)))
+        status = toolbar_view.status()
 
-        if view.status() == QQuickView.Error:
+        if status == QQuickView.Error:
             sys.exit(-1)
 
         # Wrap the QQuickView in a QWidget container
-        toolbar = QWidget.createWindowContainer(view)
+        toolbar = QWidget.createWindowContainer(toolbar_view)
         toolbar.setFixedHeight(40)  # Set a fixed height for the toolbar widget
 
         # Add the toolbar and canvas to the layout

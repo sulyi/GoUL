@@ -49,7 +49,9 @@ class GoULMainWindow(QMainWindow):
 
     @pyqtProperty(QVariant, notify=game_types_changed)
     def game_type_names(self):
-        return get_game_names()
+        names = get_game_names()
+        logger.info("Games: %s", names)
+        return names
 
     def create_toolbar(self):
         # Create the QQuickView for the QML toolbar

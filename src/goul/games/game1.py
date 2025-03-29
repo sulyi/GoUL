@@ -2,6 +2,6 @@ from .gamebase import GameBase
 
 
 class Game1(GameBase):
-    @property
-    def name(self):
+    @classmethod
+    def name(cls):
         return "Game 1"

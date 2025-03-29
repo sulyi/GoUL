@@ -1,7 +1,7 @@
 from goul.games.gamebase import GameBase
 
 
-class Game1(GameBase):
-    @property
-    def name(self):
+class Game2(GameBase):
+    @classmethod
+    def name(cls):
         return "Game 2"

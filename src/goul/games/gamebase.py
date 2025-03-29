@@ -1,6 +1,6 @@
 import abc
 
 class GameBase(abc.ABC):
-    @property
-    def name(self):
+    @classmethod
+    def name(cls):
         raise NotImplemented

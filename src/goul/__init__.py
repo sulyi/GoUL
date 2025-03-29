@@ -2,7 +2,7 @@ import sys
 
 from PyQt5.QtWidgets import QApplication
 
-from .main_window import GoULMainWindow
+from .goul_main_window import GoULMainWindow
 
 
 def main(args):

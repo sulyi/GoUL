@@ -1,4 +1,7 @@
-from .gamebase import GameBase
+from goul.games.gamebase import GameBase
 
-class Game2(GameBase):
-    name = "Game 2"
+
+class Game1(GameBase):
+    @property
+    def name(self):
+        return "Game 2"

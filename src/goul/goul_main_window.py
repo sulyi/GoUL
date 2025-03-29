@@ -54,7 +54,7 @@ class GoULMainWindow(QMainWindow):
     def create_toolbar(self):
         # Create the QQuickView for the QML toolbar
         toolbar_view = QQuickView()
-        toolbar_view.rootContext().setContextProperty("toolbar", self)
+        toolbar_view.rootContext().setContextProperty("toolbarCtx", self)
 
         qml_file = os.path.join(os.path.dirname(__file__), 'toolbar.qml')
         toolbar_view.setSource(QUrl.fromLocalFile(os.path.abspath(qml_file)))

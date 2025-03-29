@@ -14,7 +14,7 @@ ToolBar {
             icon.name: "insert-image"
             onClicked: {
                 // FIXME: change to toolbar.toggle_draw()
-                toolbar.update_plot()
+                toolbarCtx.update_plot()
             }
         }
 
@@ -33,9 +33,9 @@ ToolBar {
         // FIXME: too small dropdown
         ComboBox {
             id: gameTypeCombo
-            model: toolbar ? toolbar.game_type_names : []
+            model: toolbarCtx ? toolbarCtx.game_type_names : []
             onCurrentTextChanged: {
-                toolbar ? toolbar.set_game_type(currentText) : undefined
+                toolbarCtx ? toolbarCtx.set_game_type(currentText) : undefined
             }
         }
 

@@ -25,7 +25,7 @@ class GoULMainWindow(QMainWindow):
 
         # Wrap the QQuickView in a QWidget container
         toolbar = self.create_toolbar()
-        toolbar.setFixedHeight(40)  # Set a fixed height for the toolbar widget
+        toolbar.setFixedHeight(40)
 
         # Add the toolbar and canvas to the layout
         layout.addWidget(toolbar)

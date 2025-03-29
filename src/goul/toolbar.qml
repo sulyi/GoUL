@@ -13,8 +13,8 @@ ToolBar {
             display: AbstractButton.IconOnly
             icon.name: "insert-image"
             onClicked: {
-                // FIXME: change to mainWindow.toggle_draw()
-                mainWindow.update_plot()
+                // FIXME: change to toolbar.toggle_draw()
+                toolbar.update_plot()
             }
         }
 
@@ -33,9 +33,9 @@ ToolBar {
         // FIXME: too small dropdown
         ComboBox {
             objectName: "game_type_combo"
-            model: mainWindow.game_type_names
+            model: toolbar ? toolbar.game_type_names : []
             onCurrentTextChanged: {
-                mainWindow.set_game_type(currentText)
+                toolbar ? toolbar.set_game_type(currentText) : undefined
             }
         }
 

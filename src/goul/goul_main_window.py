@@ -20,25 +20,11 @@ class GoULMainWindow(QMainWindow):
 
         self.cf = CellularField(default_game)
 
-        central_widget = QWidget()
-        layout = QVBoxLayout(central_widget)
-
-        # Create the QQuickView for the QML toolbar
-        toolbar_view = QQuickView()
-        toolbar_view.setResizeMode(QQuickView.SizeRootObjectToView)
-        context = toolbar_view.rootContext()
-        context.setContextProperty("mainWindow", self)
-
-        qml_file = os.path.join(os.path.dirname(__file__), 'toolbar.qml')
-        toolbar_view.setSource(QUrl.fromLocalFile(os.path.abspath(qml_file)))
-        status = toolbar_view.status()
-
-        if status == QQuickView.Error:
-            logger.error("Failed to load toolbar view")
-            sys.exit(-1)
+        container = QWidget()
+        layout = QVBoxLayout(container)
 
         # Wrap the QQuickView in a QWidget container
-        toolbar = QWidget.createWindowContainer(toolbar_view)
+        toolbar = self.create_toolbar()
         toolbar.setFixedHeight(40)  # Set a fixed height for the toolbar widget
 
         # Add the toolbar and canvas to the layout
@@ -49,7 +35,7 @@ class GoULMainWindow(QMainWindow):
         layout.setStretch(0, 0)  # Toolbar doesn't stretch
         layout.setStretch(1, 1)  # Canvas stretches to fill remaining space
 
-        self.setCentralWidget(central_widget)
+        self.setCentralWidget(container)
 
     @pyqtSlot()
     def update_plot(self):
@@ -64,3 +50,20 @@ class GoULMainWindow(QMainWindow):
     @pyqtProperty(QVariant, notify=game_types_changed)
     def game_type_names(self):
         return get_game_names()
+
+    def create_toolbar(self):
+        # Create the QQuickView for the QML toolbar
+        toolbar_view = QQuickView()
+        toolbar_view.rootContext().setContextProperty("toolbar", self)
+
+        qml_file = os.path.join(os.path.dirname(__file__), 'toolbar.qml')
+        toolbar_view.setSource(QUrl.fromLocalFile(os.path.abspath(qml_file)))
+
+        if toolbar_view.status() == QQuickView.Error:
+            logger.error("Failed to load toolbar view")
+            sys.exit(-1)
+
+        toolbar_view.setResizeMode(QQuickView.SizeRootObjectToView)
+
+        # Embed QQuickView into QWidget
+        return QWidget.createWindowContainer(toolbar_view, self)

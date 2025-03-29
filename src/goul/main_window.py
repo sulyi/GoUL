@@ -1,4 +1,5 @@
 import os
+import logging
 import sys
 
 from PyQt5.QtCore import QUrl, pyqtSlot
@@ -8,6 +9,7 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 from .cellular_field import CellularField
 from . import games
 
+logger = logging.getLogger()
 
 class GoULMainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -29,6 +31,7 @@ class GoULMainWindow(QMainWindow):
         status = toolbar_view.status()
 
         if status == QQuickView.Error:
+            logger.error("Failed to load toolbar view")
             sys.exit(-1)
 
         # Wrap the QQuickView in a QWidget container

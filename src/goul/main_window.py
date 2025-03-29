@@ -2,20 +2,22 @@ import os
 import logging
 import sys
 
-from PyQt5.QtCore import QUrl, pyqtSlot
+from PyQt5.QtCore import QUrl, QVariant, pyqtProperty, pyqtSignal, pyqtSlot
 from PyQt5.QtQuick import QQuickView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
 from .cellular_field import CellularField
-from . import games
+from .games import default_game, get_game_names
 
 logger = logging.getLogger()
 
 class GoULMainWindow(QMainWindow):
+    game_types_changed = pyqtSignal()
+
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.cf = CellularField(games.default_game)
+        self.cf = CellularField(default_game)
 
         central_widget = QWidget()
         layout = QVBoxLayout(central_widget)
@@ -57,11 +59,6 @@ class GoULMainWindow(QMainWindow):
         print(f"Selected game type: {game_type}")
         # Update the game type in your CellularField or Game class
 
-    @pyqtSlot()
-    def get_game_types(self):
-        names = games.get_game_names()
-        print(names)
-        return names
-
-
-
+    @pyqtProperty(QVariant, notify=game_types_changed)
+    def game_type_names(self):
+        return get_game_names()

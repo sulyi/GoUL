@@ -30,9 +30,10 @@ ToolBar {
             icon.name: "view-refresh"
         }
 
+        // FIXME: too small dropdown
         ComboBox {
             objectName: "game_type_combo"
-            model: mainWindow.get_game_types()
+            model: mainWindow.game_type_names
             onCurrentTextChanged: {
                 mainWindow.set_game_type(currentText)
             }

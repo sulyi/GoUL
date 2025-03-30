@@ -10,7 +10,7 @@ class Game2(GameBase):
     def __next__(self):
         n_data = 50
         xdata = list(range(n_data))
-        ydata = [self.count for i in range(n_data)]
+        ydata = [self.count for _ in range(n_data)]
         self.count += 1
         return GameState(xdata, ydata)
 

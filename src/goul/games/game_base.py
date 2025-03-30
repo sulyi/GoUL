@@ -5,9 +5,6 @@ class GameBase(Iterator, ABC):
     def __init__(self, state):
         self._state = state
 
-    def __init__(self, state):
-        self._state = state
-
     @classmethod
     def name(cls):
         raise NotImplemented

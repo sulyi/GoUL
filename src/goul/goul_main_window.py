@@ -51,7 +51,7 @@ class GoULMainWindow(QMainWindow):
         # FIXME: do not update game state when game type is changed
         n_data = 50
         xdata = list(range(n_data))
-        ydata = [random.randint(0, 10) for i in range(n_data)]
+        ydata = [random.randint(0, 10) for _ in range(n_data)]
 
         game = from_game_name(game_type, GameState(xdata, ydata))
         old_canvas = self.cf.canvas

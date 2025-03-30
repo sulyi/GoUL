@@ -1,9 +1,16 @@
 from .game1 import Game1
 from .game2 import Game2
 
+_games = [Game1, Game2]
+
+_game_lookup = {game.name(): game for game in _games}
+
 def get_game_names():
-    games = [Game1, Game2]
-    return [game.name() for game in games]
+    return [game.name() for game in _games]
 
-default_game = Game1()
 
+def from_game_name(name, state):
+        try:
+            return _game_lookup[name](state)
+        except KeyError as error:
+            raise KeyError(f"No game named {name}") from error

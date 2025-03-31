@@ -16,5 +16,8 @@ class GameBase(Iterator, ABC):
     def meta(cls):
         return cls._meta
 
+    def __next__(self):
+        raise NotImplemented
+
     def get_init_state(self):
         raise NotImplemented

@@ -3,7 +3,7 @@ from collections.abc import Iterator
 
 
 class GameBase(Iterator, ABC):
-    _meta = {'imshow': {}}
+    _meta = {'imshow': {'cmap': 'binary'}}
     _name = None
 
     def __init__(self, state):

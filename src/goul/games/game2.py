@@ -1,10 +1,13 @@
+from copy import deepcopy
+
 from goul.games.game_base import GameBase
 from goul.games.game_state import GameState
 
 
 class Game2(GameBase):
     _name = "Game 2"
-    _meta = {"imshow": {"origin": "lower"}}
+    _meta = deepcopy(GameBase._meta)
+    _meta["imshow"].update({"origin": "lower"})
 
     _n_data = 50
     _xdata = list(range(_n_data))

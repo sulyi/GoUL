@@ -1,12 +1,15 @@
 import random
 
+from copy import deepcopy
+
 from .game_base import GameBase
 from .game_state import GameState
 
 
 class Game1(GameBase):
     _name = "Game 1"
-    _meta = {"imshow": {"origin": "lower"}}
+    _meta = deepcopy(GameBase._meta)
+    _meta["imshow"].update({"origin": "lower"})
 
     _n_data = 50
     _xdata = list(range(_n_data))

@@ -20,16 +20,15 @@ class GoULMainWindow(QMainWindow):
         super().__init__(parent)
 
         container = QWidget()
-        self.layout = QVBoxLayout(container)
+        layout = QVBoxLayout(container)
 
         self.cf = CellularField(None)
 
         toolbar = self.create_toolbar()
         toolbar.setFixedHeight(40)
 
-        self.layout.addWidget(toolbar)
-        self.layout.addWidget(self.cf.canvas)
-
+        layout.addWidget(toolbar)
+        layout.addWidget(self.cf.canvas)
         self.setCentralWidget(container)
 
     @pyqtSlot()

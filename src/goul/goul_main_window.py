@@ -9,7 +9,6 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
 from .cellular_field import CellularField
 from .games import get_game_names, from_game_name
-from .games.game_state import GameState
 
 logger = logging.getLogger()
 logger.addHandler(logging.StreamHandler())
@@ -47,13 +46,7 @@ class GoULMainWindow(QMainWindow):
     @pyqtSlot(str)
     def set_game_type(self, game_type):
         logger.info("Selected game type: %s", game_type)
-
-        # FIXME: do not update game state when game type is changed
-        n_data = 50
-        xdata = list(range(n_data))
-        ydata = [random.randint(0, 10) for _ in range(n_data)]
-
-        self.cf.game = from_game_name(game_type, GameState(xdata, ydata))
+        self.cf.game = from_game_name(game_type, self.cf.game.state if self.cf.game else None)
         self.cf.update_plot()
 
     @pyqtProperty(QVariant, notify=game_types_changed)

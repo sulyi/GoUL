@@ -9,7 +9,7 @@ def get_game_names():
     return [game.name() for game in _games]
 
 
-def from_game_name(name, state):
+def from_game_name(name, state=None):
         try:
             return _game_lookup[name](state)
         except KeyError as error:

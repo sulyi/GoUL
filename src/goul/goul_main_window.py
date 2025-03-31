@@ -53,11 +53,8 @@ class GoULMainWindow(QMainWindow):
         xdata = list(range(n_data))
         ydata = [random.randint(0, 10) for _ in range(n_data)]
 
-        game = from_game_name(game_type, GameState(xdata, ydata))
-        old_canvas = self.cf.canvas
-        self.cf = CellularField(game)
+        self.cf.game = from_game_name(game_type, GameState(xdata, ydata))
         self.cf.update_plot()
-        self.layout.replaceWidget(old_canvas, self.cf.canvas)
 
     @pyqtProperty(QVariant, notify=game_types_changed)
     def game_type_names(self):

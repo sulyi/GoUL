@@ -4,7 +4,6 @@ from matplotlib.figure import Figure
 from .games.game_base import GameBase
 
 
-# TODO: Change placeholder graph to an actual animation that uses game to generate new data
 class CellularField:
 
     def __init__(self, game: [GameBase, None]):
@@ -20,6 +19,7 @@ class CellularField:
 
         self._figure.clear()
         ax = self._figure.add_subplot(111)
-        ax.plot(state.xdata, state.ydata, 'r')
+        ax.matshow(state.data, **self.game.meta()['imshow'])
+        ax.axis(False)
         # Trigger the canvas to update and redraw.
         self.canvas.draw()

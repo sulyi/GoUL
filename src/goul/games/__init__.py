@@ -13,4 +13,4 @@ def from_game_name(name, state=None):
         try:
             return _game_lookup[name](state)
         except KeyError as error:
-            raise KeyError(f"No game named {name}") from error
+            raise KeyError(f"No game named \"{name}\"") from error

@@ -30,9 +30,6 @@ class GoULMainWindow(QMainWindow):
         self.layout.addWidget(toolbar)
         self.layout.addWidget(self.cf.canvas)
 
-        # layout.setStretch(0, 0)  # Toolbar doesn't stretch
-        # layout.setStretch(1, 1)  # Canvas stretches to fill remaining space
-
         self.setCentralWidget(container)
 
     @pyqtSlot()

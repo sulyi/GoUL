@@ -1,6 +1,5 @@
 import os
 import logging
-import random
 import sys
 
 from PyQt5.QtCore import QUrl, QVariant, pyqtProperty, pyqtSignal, pyqtSlot
@@ -12,6 +11,7 @@ from .games import get_game_names, from_game_name
 
 logger = logging.getLogger()
 logger.addHandler(logging.StreamHandler())
+
 
 class GoULMainWindow(QMainWindow):
     game_types_changed = pyqtSignal()

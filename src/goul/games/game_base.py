@@ -1,6 +1,7 @@
 from abc import ABC
 from collections.abc import Iterator
 
+
 class GameBase(Iterator, ABC):
     _meta = {'imshow': {}}
     _name = None

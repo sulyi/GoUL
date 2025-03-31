@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QApplication
 
 from .goul_main_window import GoULMainWindow, logger
 
+
 def get_config(args):
     parser = argparse.ArgumentParser()
     log_levels = [
@@ -20,6 +21,7 @@ def get_config(args):
     parser.add_argument('-l', '--loglevel', default='WARN', choices=log_levels)
 
     return parser.parse_args(args[1:])
+
 
 def main(args):
     app = QApplication(args)

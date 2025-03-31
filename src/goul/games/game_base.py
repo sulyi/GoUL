@@ -6,6 +6,11 @@ class GameBase(Iterator, ABC):
     _meta = {'imshow': {'cmap': 'binary'}}
     _name = None
 
+    # TODO: implement actual games:
+    #  Conway's Game of Life
+    #  Monte-Carlo Extension
+    #  Point Process Extension
+
     def __init__(self, state):
         self.state = state if state is not None else self.get_init_state()
 

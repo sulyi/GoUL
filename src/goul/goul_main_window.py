@@ -2,7 +2,15 @@ import os
 import logging
 import sys
 
-from PyQt5.QtCore import QUrl, QVariant, pyqtProperty, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import (
+    QObject,
+    QThread,
+    QUrl,
+    QVariant,
+    pyqtProperty,
+    pyqtSignal,
+    pyqtSlot,
+)
 from PyQt5.QtQuick import QQuickView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
@@ -13,11 +21,36 @@ logger = logging.getLogger()
 logger.addHandler(logging.StreamHandler())
 
 
+class GameRunner(QObject):
+    def __init__(self, game):
+        super().__init__()
+        self.game = game
+        self.is_running = False
+
+        self._thread = QThread()
+        self.moveToThread(self._thread)
+        self._thread.started.connect(self.run)
+
+    def start(self):
+        self.is_running = True
+        self._thread.start()
+
+    def stop(self):
+        self.is_running = False
+        self._thread.quit()
+        self._thread.wait()
+
+    def run(self):
+        while self.is_running:
+            self.game()
+
 class GoULMainWindow(QMainWindow):
     game_types_changed = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
+
+        self.game_loop = GameRunner(self.update_plot)
 
         container = QWidget()
         layout = QVBoxLayout(container)
@@ -44,7 +77,14 @@ class GoULMainWindow(QMainWindow):
         logger.info("Selected game type: %s", game_type)
         self.cf.game = from_game_name(
             game_type, self.cf.game.state if self.cf.game else None)
-        self.cf.update_plot()
+        self.update_plot()
+
+    @pyqtSlot()
+    def toggle_run(self):
+        if self.game_loop.is_running:
+            self.game_loop.stop()
+        else:
+            self.game_loop.start()
 
     @pyqtProperty(QVariant, notify=game_types_changed)
     def game_type_names(self):
@@ -68,3 +108,11 @@ class GoULMainWindow(QMainWindow):
 
         # Embed QQuickView into QWidget
         return QWidget.createWindowContainer(toolbar_view, self)
+
+    def closeEvent(self, event):
+        self.cleanup()
+        event.accept()
+
+
+    def cleanup(self):
+        self.game_loop.stop()

@@ -12,10 +12,8 @@ ToolBar {
             id: drawBtn
             display: AbstractButton.IconOnly
             icon.name: "insert-image"
-            onClicked: {
-                // FIXME: change to toolbar.load_image()
-                toolbarCtx.update_plot()
-            }
+            // TODO: change to toolbar.load_image()
+            onClicked: toolbarCtx.update_plot()
         }
 
         ToolButton {
@@ -48,6 +46,7 @@ ToolBar {
             display: AbstractButton.IconOnly
             // TODO: change icon as toggled
             icon.name: "media-playback-start"
+            onClicked: toolbarCtx.toggle_run()
         }
 
     }

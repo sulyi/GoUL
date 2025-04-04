@@ -6,6 +6,7 @@ class GameState:
 
     @property
     def data(self):
+        # FIXME: changing games mess up data
         # Convert sparse data to binary matrix
         min_x = min(x for x, _ in self.cells)
         min_y = min(y for _, y in self.cells)

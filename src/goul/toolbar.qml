@@ -15,6 +15,7 @@ ToolBar {
             // TODO: change to toolbar.load_image()
             onClicked: toolbarCtx.update_plot()
         }
+        // TODO: step button?
 
         ToolButton {
             id: clearBtn

@@ -1,7 +1,7 @@
-from .game1 import Game1
+from .conways_game_of_life import DeterministicGame
 from .game2 import Game2
 
-_games = [Game1, Game2]
+_games = [DeterministicGame, Game2]
 _game_lookup = {game.name(): game for game in _games}
 
 

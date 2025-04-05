@@ -19,6 +19,7 @@ from .games import get_game_names, from_game_name
 
 logger = logging.getLogger()
 logger.addHandler(logging.StreamHandler())
+matplot_logger = logging.getLogger('matplotlib.font_manager')
 
 
 class GameRunner(QObject):

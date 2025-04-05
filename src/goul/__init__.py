@@ -3,7 +3,7 @@ import sys
 
 from PyQt5.QtWidgets import QApplication
 
-from .goul_main_window import GoULMainWindow, logger
+from .goul_main_window import GoULMainWindow, logger, matplot_logger
 
 
 def get_config(args):
@@ -28,6 +28,7 @@ def main(args):
 
     config = get_config(args)
     logger.setLevel(config.loglevel)
+    matplot_logger.setLevel("WARNING")
 
     win = GoULMainWindow()
     win.show()

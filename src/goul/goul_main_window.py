@@ -87,6 +87,13 @@ class GoULMainWindow(QMainWindow):
             logger.info("Starting game loop...")
             self.game_loop.start()
 
+    @pyqtSlot()
+    def generate_state(self):
+        logger.info("Generating new state...")
+        self.game_loop.stop()
+        self.cf.game.state = self.cf.game.get_init_state()
+        self._plot()
+
     @pyqtProperty(QVariant, notify=game_types_changed)
     def game_type_names(self):
         names = get_game_names()

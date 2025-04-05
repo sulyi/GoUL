@@ -27,6 +27,7 @@ ToolBar {
             id: randomBtn
             display: AbstractButton.IconOnly
             icon.name: "view-refresh"
+            onClicked: toolbarCtx.generate_state()
         }
 
         // FIXME: too small dropdown

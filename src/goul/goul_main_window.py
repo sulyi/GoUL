@@ -36,10 +36,11 @@ class GameRunner(QObject):
         self.is_running = True
         self._thread.start()
 
-    def stop(self):
+    def stop(self, break_loop=False):
         self.is_running = False
         self._thread.quit()
-        self._thread.wait()
+        if not break_loop:
+            self._thread.wait()
 
     def run(self):
         while self.is_running:
@@ -76,7 +77,8 @@ class GoULMainWindow(QMainWindow):
         logger.info("Selected game type: \"%s\"", game_type)
         self.cf.game = from_game_name(
             game_type, self.cf.game.state if self.cf.game else None)
-        self.update_plot()
+        self.game_loop.stop()
+        self._plot()
 
     @pyqtSlot()
     def toggle_run(self):

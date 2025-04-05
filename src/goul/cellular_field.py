@@ -11,15 +11,19 @@ class CellularField:
         self._figure = Figure()
         self.canvas = FigureCanvas(self._figure)
 
-    def update_plot(self):
+    def plot(self):
         if not self.game:
-            raise ValueError("No game is set")
-
-        state = next(self.game)
+            raise ValueError("Game is empty")
 
         self._figure.clear()
+
+        if not self.game.state:
+            self.canvas.draw()
+            raise ValueError("Invalid game state")
+
         ax = self._figure.add_subplot(111)
-        ax.matshow(state.data, **self.game.meta()['imshow'])
         ax.axis(False)
+        ax.matshow(self.game.state.data, **self.game.meta()['imshow'])
         # Trigger the canvas to update and redraw.
         self.canvas.draw()
+

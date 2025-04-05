@@ -4,9 +4,14 @@ from dataclasses import dataclass
 class GameState:
     cells: set[tuple[int, int]]
 
+    def __bool__(self):
+        return bool(self.cells)
+
     @property
     def data(self):
-        # FIXME: changing games mess up data
+        if not self.cells:
+            return None
+
         # Convert sparse data to binary matrix
         min_x = min(x for x, _ in self.cells)
         min_y = min(y for _, y in self.cells)

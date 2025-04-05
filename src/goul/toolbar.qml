@@ -9,18 +9,18 @@ ToolBar {
         width: parent.width
 
         ToolButton {
-            id: drawBtn
+            id: loadBtn
             display: AbstractButton.IconOnly
             icon.name: "insert-image"
-            // TODO: change to toolbar.load_image()
-            onClicked: toolbarCtx.update_plot()
+            // TODO: add eventhandler
+            //  onClicked: toolbarCtx.load_state()
         }
-        // TODO: step button?
 
         ToolButton {
-            id: clearBtn
+            id: stepBtn
             display: AbstractButton.IconOnly
-            icon.name: "edit-clear"
+            icon.name: "edit-redo"
+            onClicked: toolbarCtx.step_game()
         }
 
         ToolButton {

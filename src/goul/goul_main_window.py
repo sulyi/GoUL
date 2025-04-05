@@ -51,14 +51,14 @@ class GoULMainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.game_loop = GameRunner(self.update_plot)
+        self.game_loop = GameRunner(self._update_plot)
 
         container = QWidget()
         layout = QVBoxLayout(container)
 
         self.cf = CellularField(None)
 
-        toolbar = self.create_toolbar()
+        toolbar = self._create_toolbar()
         toolbar.setFixedHeight(40)
 
         layout.addWidget(toolbar)
@@ -66,16 +66,14 @@ class GoULMainWindow(QMainWindow):
         self.setCentralWidget(container)
 
     @pyqtSlot()
-    def update_plot(self):
-        logger.info("Updating plot...")
-        try:
-            self.cf.update_plot()
-        except ValueError as error:
-            logging.warn(error)
+    def step_game(self):
+        logger.info("Stepping next state...")
+        self.game_loop.stop()
+        self._update_plot()
 
     @pyqtSlot(str)
     def set_game_type(self, game_type):
-        logger.info("Selected game type: %s", game_type)
+        logger.info("Selected game type: \"%s\"", game_type)
         self.cf.game = from_game_name(
             game_type, self.cf.game.state if self.cf.game else None)
         self.update_plot()
@@ -83,8 +81,10 @@ class GoULMainWindow(QMainWindow):
     @pyqtSlot()
     def toggle_run(self):
         if self.game_loop.is_running:
+            logger.info("Stopping game loop...")
             self.game_loop.stop()
         else:
+            logger.info("Starting game loop...")
             self.game_loop.start()
 
     @pyqtProperty(QVariant, notify=game_types_changed)
@@ -93,7 +93,11 @@ class GoULMainWindow(QMainWindow):
         logger.info("Games: %s", names)
         return names
 
-    def create_toolbar(self):
+    def closeEvent(self, event):
+        self._cleanup()
+        event.accept()
+
+    def _create_toolbar(self):
         # Create the QQuickView for the QML toolbar
         toolbar_view = QQuickView()
         toolbar_view.rootContext().setContextProperty("toolbarCtx", self)
@@ -110,10 +114,21 @@ class GoULMainWindow(QMainWindow):
         # Embed QQuickView into QWidget
         return QWidget.createWindowContainer(toolbar_view, self)
 
-    def closeEvent(self, event):
-        self.cleanup()
-        event.accept()
-
-
-    def cleanup(self):
+    def _cleanup(self):
         self.game_loop.stop()
+
+    def _update_plot(self):
+        logger.debug("Updating plot...")
+        try:
+            next(self.cf.game)
+            self._plot()
+        except StopIteration as error:
+            logger.warning("Game ended, due to: %s", error)
+            self.game_loop.stop(break_loop=True)
+
+    def _plot(self):
+        try:
+            self.cf.plot()
+        except ValueError as error:
+            logger.warning("Game loop stopped, due to %s", error)
+            self.game_loop.stop(break_loop=True)

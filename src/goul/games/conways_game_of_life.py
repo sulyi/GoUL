@@ -24,20 +24,26 @@ class DeterministicGame(GameBase):
             (1, -1),  # Below left
             (1, 0),  # Below
             (1, 1),  # Below right
-
         )
-        num_neighbors = defaultdict(int)
-        for row, col in self.state.cells:
-            for drow, dcol in neighbors:
-                num_neighbors[(row + drow, col + dcol)] += 1
+
+        neighbor_count = defaultdict(int)
+        for x, y in self.state.cells:
+            for offset_x, offset_y in neighbors:
+                neighbor_count[(x + offset_x, y + offset_y)] += 1
+
         stay_alive = {
-            cell for cell, num in num_neighbors.items() if 1 < num < 4
+            cell for cell, count in neighbor_count.items() if 1 < count < 4
         } & self.state.cells
         come_alive = {
-            cell for cell, num in num_neighbors.items() if num == 3
+            cell for cell, count in neighbor_count.items() if count == 3
         } - self.state.cells
 
-        self.state.cells = stay_alive | come_alive
+        new_cells = stay_alive | come_alive
+
+        if self.state.cells == new_cells:
+            raise StopIteration("No change")
+
+        self.state.cells = new_cells
 
         return self.state
 

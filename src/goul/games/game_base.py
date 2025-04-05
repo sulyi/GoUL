@@ -7,7 +7,6 @@ class GameBase(Iterator, ABC):
     _name = None
 
     # TODO: implement actual games:
-    #  Conway's Game of Life
     #  Monte-Carlo Extension
     #  Point Process Extension
 

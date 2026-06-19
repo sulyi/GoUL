@@ -12,10 +12,11 @@ logger.addHandler(logging.StreamHandler())
 matplot_logger = logging.getLogger('matplotlib.font_manager')
 
 
-class GameRunner(QObject):
-    def __init__(self, game):
+class GameClock(QObject):
+    tick = pyqtSignal()
+
+    def __init__(self):
         super().__init__()
-        self.game = game
         self.is_running = False
 
         self._thread = QThread()
@@ -34,7 +35,8 @@ class GameRunner(QObject):
 
     def run(self):
         while self.is_running:
-            self.game()
+            self.tick.emit()
+            QThread.msleep(10)
 
 class GoULMainWindow(QMainWindow):
     game_types_changed = pyqtSignal()
@@ -42,7 +44,8 @@ class GoULMainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.game_loop = GameRunner(self._update_plot)
+        self.game_clock = GameClock()
+        self.game_clock.tick.connect(self._update_plot)
 
         self.cf = CellularField(None)
 
@@ -66,7 +69,7 @@ class GoULMainWindow(QMainWindow):
         self._plot()
 
     def toggle_run(self):
-        if self.game_loop.is_running:
+        if self.game_clock.is_running:
             self._stop_game()
         else:
             self._start_game()
@@ -127,23 +130,23 @@ class GoULMainWindow(QMainWindow):
             self._plot()
         except StopIteration as error:
             logger.warning("Game ended, due to: %s", error)
-            self.game_loop.stop(break_loop=True)
+            self.game_clock.stop(break_loop=True)
 
     def _start_game(self):
         self.play_stop_toggle_action.setIcon(QIcon.fromTheme('media-playback-pause'))
         self.play_stop_toggle_action.setToolTip("Stop")
         logger.info("Starting game loop...")
-        self.game_loop.start()
+        self.game_clock.start()
 
     def _stop_game(self):
         self.play_stop_toggle_action.setIcon(QIcon.fromTheme('media-playback-start'))
         self.play_stop_toggle_action.setToolTip("Play")
         logger.info("Stopping game loop...")
-        self.game_loop.stop()
+        self.game_clock.stop()
 
     def _plot(self):
         try:
             self.cf.plot()
         except ValueError as error:
             logger.warning("Game loop stopped, due to %s", error)
-            self.game_loop.stop(break_loop=True)
+            self.game_clock.stop(break_loop=True)

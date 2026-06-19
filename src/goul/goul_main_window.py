@@ -1,18 +1,8 @@
-import os
 import logging
-import sys
 
-from PyQt5.QtCore import (
-    QObject,
-    QThread,
-    QUrl,
-    QVariant,
-    pyqtProperty,
-    pyqtSignal,
-    pyqtSlot,
-)
-from PyQt5.QtQuick import QQuickView
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget
+from PyQt5.QtCore import QObject, QThread, pyqtSignal
+from PyQt5.QtWidgets import QMainWindow, QWidget, QToolBar, QComboBox, QSizePolicy
+from PyQt5.QtGui import QIcon
 
 from .cellular_field import CellularField
 from .games import get_game_names, from_game_name
@@ -54,77 +44,81 @@ class GoULMainWindow(QMainWindow):
 
         self.game_loop = GameRunner(self._update_plot)
 
-        container = QWidget()
-        layout = QVBoxLayout(container)
-
         self.cf = CellularField(None)
 
-        toolbar = self._create_toolbar()
-        toolbar.setFixedHeight(40)
+        games = get_game_names()
 
-        layout.addWidget(toolbar)
-        layout.addWidget(self.cf.canvas)
-        self.setCentralWidget(container)
+        self._create_toolbar(games)
+        self.addToolBar(self.toolbar)
 
-    @pyqtSlot()
+        self.setCentralWidget(self.cf.canvas)
+
     def step_game(self):
         logger.info("Stepping next state...")
-        self.game_loop.stop()
+        self._stop_game()
         self._update_plot()
 
-    @pyqtSlot(str)
     def set_game_type(self, game_type):
         logger.info("Selected game type: \"%s\"", game_type)
         self.cf.game = from_game_name(
             game_type, self.cf.game.state if self.cf.game else None)
-        self.game_loop.stop()
+        self._stop_game()
         self._plot()
 
-    @pyqtSlot()
     def toggle_run(self):
         if self.game_loop.is_running:
-            logger.info("Stopping game loop...")
-            self.game_loop.stop()
+            self._stop_game()
         else:
-            logger.info("Starting game loop...")
-            self.game_loop.start()
+            self._start_game()
 
-    @pyqtSlot()
     def generate_state(self):
         logger.info("Generating new state...")
-        self.game_loop.stop()
+        self._stop_game()
         self.cf.game.state = self.cf.game.get_init_state()
         self._plot()
 
-    @pyqtProperty(QVariant, notify=game_types_changed)
-    def game_type_names(self):
-        names = get_game_names()
-        logger.info("Games: %s", names)
-        return names
 
     def closeEvent(self, event):
         self._cleanup()
         event.accept()
 
-    def _create_toolbar(self):
-        # Create the QQuickView for the QML toolbar
-        toolbar_view = QQuickView()
-        toolbar_view.rootContext().setContextProperty("toolbarCtx", self)
+    def _create_toolbar(self, game_names):
+        self.toolbar = QToolBar("Main Toolbar")
+        self.toolbar.setFixedHeight(40)
 
-        qml_file = os.path.join(os.path.dirname(__file__), 'toolbar.qml')
-        toolbar_view.setSource(QUrl.fromLocalFile(os.path.abspath(qml_file)))
+        self.step_action = self.toolbar.addAction(QIcon.fromTheme("edit-redo"), "")
+        self.step_action.setToolTip("Step")
+        self.step_action.triggered.connect(self.step_game)
 
-        if toolbar_view.status() == QQuickView.Error:
-            logger.error("Failed to load toolbar view")
-            sys.exit(-1)
+        self.restart_action = self.toolbar.addAction(QIcon.fromTheme("view-refresh"), "")
+        self.restart_action.setToolTip("Restart")
+        self.restart_action.triggered.connect(self.generate_state)
 
-        toolbar_view.setResizeMode(QQuickView.SizeRootObjectToView)
+        self.game_combo = QComboBox()
+        self.game_combo.addItems(game_names)
+        self.game_combo.currentTextChanged.connect(self.set_game_type)
+        self.toolbar.addWidget(self.game_combo)
 
-        # Embed QQuickView into QWidget
-        return QWidget.createWindowContainer(toolbar_view, self)
+        # spacer to push play/stop to the right
+        spacer = QWidget()
+        spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.toolbar.addWidget(spacer)
+
+        self.play_stop_toggle_action = self.toolbar.addAction(QIcon.fromTheme('media-playback-start'), "")
+        self.play_stop_toggle_action.triggered.connect(self.toggle_run)
+
+        if game_names:
+            # ensure app state initialized
+            self.game_combo.setCurrentIndex(0)
+            self.set_game_type(self.game_combo.currentText())
+
+        has_game = self.cf.game is not None
+        self.step_action.setEnabled(has_game)
+        self.play_stop_toggle_action.setEnabled(has_game)
+        self.restart_action.setEnabled(has_game)
 
     def _cleanup(self):
-        self.game_loop.stop()
+        self._stop_game()
 
     def _update_plot(self):
         logger.debug("Updating plot...")
@@ -134,6 +128,18 @@ class GoULMainWindow(QMainWindow):
         except StopIteration as error:
             logger.warning("Game ended, due to: %s", error)
             self.game_loop.stop(break_loop=True)
+
+    def _start_game(self):
+        self.play_stop_toggle_action.setIcon(QIcon.fromTheme('media-playback-pause'))
+        self.play_stop_toggle_action.setToolTip("Stop")
+        logger.info("Starting game loop...")
+        self.game_loop.start()
+
+    def _stop_game(self):
+        self.play_stop_toggle_action.setIcon(QIcon.fromTheme('media-playback-start'))
+        self.play_stop_toggle_action.setToolTip("Play")
+        logger.info("Stopping game loop...")
+        self.game_loop.stop()
 
     def _plot(self):
         try:

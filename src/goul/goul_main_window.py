@@ -1,6 +1,6 @@
 import logging
 
-from PyQt5.QtCore import QObject, QThread, pyqtSignal
+from PyQt5.QtCore import QObject, QTimer, pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QWidget, QToolBar, QComboBox, QSizePolicy
 from PyQt5.QtGui import QIcon
 
@@ -17,26 +17,25 @@ class GameClock(QObject):
 
     def __init__(self):
         super().__init__()
-        self.is_running = False
+        self._timer = QTimer(self)
+        self._timer.setInterval(10)
+        self._timer.timeout.connect(self._on_timeout)
 
-        self._thread = QThread()
-        self.moveToThread(self._thread)
-        self._thread.started.connect(self.run)
+    def _on_timeout(self):
+        self.tick.emit()
+
+    @property
+    def is_running(self):
+        return self._timer.isActive()
 
     def start(self):
-        self.is_running = True
-        self._thread.start()
+        if not self._timer.isActive():
+            self._timer.start()
 
-    def stop(self, break_loop=False):
-        self.is_running = False
-        self._thread.quit()
-        if not break_loop:
-            self._thread.wait()
+    def stop(self):
+        if self._timer.isActive():
+            self._timer.stop()
 
-    def run(self):
-        while self.is_running:
-            self.tick.emit()
-            QThread.msleep(10)
 
 class GoULMainWindow(QMainWindow):
     game_types_changed = pyqtSignal()

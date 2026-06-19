@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "goul"
+version = "0.1.0"
+description = "Game of Uncertain Life (A visualisation of a stohastic simulation based on Conway's Game of Life)"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "LICENSE"}
+
+dependencies = [
+    "matplotlib~=3.11.0",
+    "PyQt5~=5.15.11",
+]
+
+[project.scripts]
+goul = "goul.main:main"
+
+[tool.setuptools]
+packages = ["goul"]
+
+[tool.setuptools.package-dir]
+"" = "src"

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -6,7 +8,7 @@ from .games.game_base import GameBase
 
 class CellularField:
 
-    def __init__(self, game: [GameBase, None]):
+    def __init__(self, game: Optional[GameBase]):
         self.game = game
         self._figure = Figure()
         self.canvas = FigureCanvas(self._figure)

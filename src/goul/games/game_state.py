@@ -16,12 +16,13 @@ class GameState:
         min_x = min(x for x, _ in self.cells)
         min_y = min(y for _, y in self.cells)
 
-        width = max(x for x, _ in self.cells) - min_x + 1
-        height = max(y for _, y in self.cells) - min_y + 3
+        padding = 1
+        width = max(x for x, _ in self.cells) - min_x + 2 * padding
+        height = max(y for _, y in self.cells) - min_y + 2 * padding
 
         data = [[0 for _ in range(width)] for _ in range(height)]
 
         for x, y in self.cells:
-            data[y - min_y + 1][x - min_x] = 1
+            data[y - min_y + padding][x - min_x + padding] = 1
 
         return data

@@ -64,13 +64,6 @@ class MainWindow(QMainWindow):
         self.cf.game.state = self.cf.game.get_init_state()
         self._plot()
 
-    def closeEvent(self, event):
-        self._cleanup()
-        event.accept()
-
-    def _cleanup(self):
-        self._stop_game()
-
     def _update_plot(self):
         logger.debug("Updating plot...")
         try:

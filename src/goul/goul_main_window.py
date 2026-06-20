@@ -14,12 +14,14 @@ matplot_logger = logging.getLogger('matplotlib.font_manager')
 
 class GoULMainWindow(QMainWindow):
     tick = pyqtSignal()
+    _GAME_TICK_INTERVAL_MS = 10
+    _TOOLBAR_HEIGHT = 40
 
     def __init__(self, parent=None):
         super().__init__(parent)
 
         self.game_clock = QTimer(self)
-        self.game_clock.setInterval(10)
+        self.game_clock.setInterval(self._GAME_TICK_INTERVAL_MS)
         self.game_clock.timeout.connect(self.tick.emit)
         self.tick.connect(self._update_plot)
 
@@ -61,7 +63,7 @@ class GoULMainWindow(QMainWindow):
 
     def _create_toolbar(self, game_names):
         self.toolbar = QToolBar("Main Toolbar")
-        self.toolbar.setFixedHeight(40)
+        self.toolbar.setFixedHeight(self._TOOLBAR_HEIGHT)
 
         self.step_action = self.toolbar.addAction(QIcon.fromTheme("edit-redo"), "")
         self.step_action.setToolTip("Step")

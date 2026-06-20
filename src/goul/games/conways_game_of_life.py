@@ -12,7 +12,7 @@ class DeterministicGame(GameBase):
     _meta = deepcopy(GameBase._meta)
     _meta["imshow"].update({"origin": "lower"})
 
-    _n_data = 50
+    _INITIAL_POP_SIZE = 50
 
     def __next__(self):
         neighbors = (
@@ -48,7 +48,7 @@ class DeterministicGame(GameBase):
         return self.state
 
     def get_init_state(self):
-        xdata = [random.randint(0, 10) for _ in range(self._n_data)]
-        ydata = [random.randint(0, 10) for _ in range(self._n_data)]
+        xdata = [random.randint(0, 10) for _ in range(self._INITIAL_POP_SIZE)]
+        ydata = [random.randint(0, 10) for _ in range(self._INITIAL_POP_SIZE)]
 
         return GameState({(x, y) for x, y in zip(xdata, ydata)})

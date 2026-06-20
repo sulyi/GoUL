@@ -1,17 +1,14 @@
-from typing import Optional
 import logging
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-
-from ..games.game_base import GameBase
 
 logger = logging.getLogger(__name__)
 
 
 class CellularField:
 
-    def __init__(self, game: Optional[GameBase]):
+    def __init__(self, game=None):
         self.game = game
         self._figure = Figure()
         self.canvas = FigureCanvas(self._figure)
@@ -35,6 +32,5 @@ class CellularField:
     def cleanup(self):
         self._figure.clear()
         self._figure.clf()
-        self.canvas.close()
         logger.debug("CellularField resources cleaned up")
 

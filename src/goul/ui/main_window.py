@@ -22,7 +22,7 @@ class MainWindow(QMainWindow):
         self.game_clock.timeout.connect(self.tick.emit)
         self.tick.connect(self._update_plot)
 
-        self.cf = CellularField(None)
+        self.cf = CellularField()
 
         game_names = get_game_names()
         self.toolbar = MainToolbar()

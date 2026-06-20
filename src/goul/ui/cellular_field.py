@@ -1,9 +1,12 @@
 from typing import Optional
+import logging
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 from ..games.game_base import GameBase
+
+logger = logging.getLogger(__name__)
 
 
 class CellularField:
@@ -15,7 +18,7 @@ class CellularField:
 
     def plot(self):
         if not self.game:
-            raise ValueError("Game is empty")
+            raise ValueError("Game is not initialized")
 
         self._figure.clear()
 
@@ -28,3 +31,10 @@ class CellularField:
         ax.matshow(self.game.state.data, **self.game.meta()['imshow'])
         # Trigger the canvas to update and redraw.
         self.canvas.draw()
+
+    def cleanup(self):
+        self._figure.clear()
+        self._figure.clf()
+        self.canvas.close()
+        logger.debug("CellularField resources cleaned up")
+

@@ -47,8 +47,8 @@ class MainWindow(QMainWindow):
 
     def set_game_type(self, game_type):
         logger.info("Selected game type: \"%s\"", game_type)
-        self.cf.game = from_game_name(
-            game_type, self.cf.game.state if self.cf.game else None)
+        self.cf.cleanup()
+        self.cf.game = from_game_name(game_type, self.cf.game.state if self.cf.game else None)
         self._stop_game()
         self._plot()
 

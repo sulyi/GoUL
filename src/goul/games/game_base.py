@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from collections.abc import Iterator
 
 
@@ -21,8 +21,13 @@ class GameBase(Iterator, ABC):
     def meta(cls):
         return cls._meta
 
+    @abstractmethod
     def __next__(self):
-        raise NotImplemented
+        """Return the next game state.
+        
+        Should raise StopIteration when game reaches terminal state.
+        """
 
+    @abstractmethod
     def get_init_state(self):
-        raise NotImplemented
+        """Get initial game state."""

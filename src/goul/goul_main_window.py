@@ -1,6 +1,6 @@
 import logging
 
-from PyQt5.QtCore import QObject, QTimer, pyqtSignal
+from PyQt5.QtCore import QTimer, pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QWidget, QToolBar, QComboBox, QSizePolicy
 from PyQt5.QtGui import QIcon
 
@@ -12,45 +12,21 @@ logger.addHandler(logging.StreamHandler())
 matplot_logger = logging.getLogger('matplotlib.font_manager')
 
 
-class GameClock(QObject):
-    tick = pyqtSignal()
-
-    def __init__(self):
-        super().__init__()
-        self._timer = QTimer(self)
-        self._timer.setInterval(10)
-        self._timer.timeout.connect(self._on_timeout)
-
-    def _on_timeout(self):
-        self.tick.emit()
-
-    @property
-    def is_running(self):
-        return self._timer.isActive()
-
-    def start(self):
-        if not self._timer.isActive():
-            self._timer.start()
-
-    def stop(self):
-        if self._timer.isActive():
-            self._timer.stop()
-
-
 class GoULMainWindow(QMainWindow):
+    tick = pyqtSignal()
     game_types_changed = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.game_clock = GameClock()
-        self.game_clock.tick.connect(self._update_plot)
+        self.game_clock = QTimer(self)
+        self.game_clock.setInterval(10)
+        self.game_clock.timeout.connect(self.tick.emit)
+        self.tick.connect(self._update_plot)
 
         self.cf = CellularField(None)
 
-        games = get_game_names()
-
-        self._create_toolbar(games)
+        self._create_toolbar(get_game_names())
         self.addToolBar(self.toolbar)
 
         self.setCentralWidget(self.cf.canvas)
@@ -68,7 +44,7 @@ class GoULMainWindow(QMainWindow):
         self._plot()
 
     def toggle_run(self):
-        if self.game_clock.is_running:
+        if self.game_clock.isActive():
             self._stop_game()
         else:
             self._start_game()
@@ -129,7 +105,7 @@ class GoULMainWindow(QMainWindow):
             self._plot()
         except StopIteration as error:
             logger.warning("Game ended, due to: %s", error)
-            self.game_clock.stop(break_loop=True)
+            self.game_clock.stop()
 
     def _start_game(self):
         self.play_stop_toggle_action.setIcon(QIcon.fromTheme('media-playback-pause'))
@@ -148,4 +124,4 @@ class GoULMainWindow(QMainWindow):
             self.cf.plot()
         except ValueError as error:
             logger.warning("Game loop stopped, due to %s", error)
-            self.game_clock.stop(break_loop=True)
+            self.game_clock.stop()

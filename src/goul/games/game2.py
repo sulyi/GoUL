@@ -1,7 +1,7 @@
 from copy import deepcopy
 
-from goul.games.game_base import GameBase
-from goul.games.game_state import GameState
+from .game_base import GameBase
+from .game_state import GameState
 
 
 class Game2(GameBase):

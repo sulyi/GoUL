@@ -10,7 +10,7 @@ class GameState:
     @property
     def data(self):
         if not self.cells:
-            return None
+            return []
 
         # Convert sparse data to binary matrix
         min_x = min(x for x, _ in self.cells)

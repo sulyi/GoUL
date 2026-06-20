@@ -3,7 +3,7 @@ from typing import Optional
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from .games.game_base import GameBase
+from ..games.game_base import GameBase
 
 
 class CellularField:
@@ -28,4 +28,3 @@ class CellularField:
         ax.matshow(self.game.state.data, **self.game.meta()['imshow'])
         # Trigger the canvas to update and redraw.
         self.canvas.draw()
-

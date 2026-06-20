@@ -1,9 +1,15 @@
 import argparse
+import logging
 import sys
 
 from PyQt5.QtWidgets import QApplication
 
-from .goul_main_window import GoULMainWindow, logger, matplot_logger
+from .ui import MainWindow
+
+# Configure logging
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler())
+matplot_logger = logging.getLogger('matplotlib.font_manager')
 
 
 def get_config(args):
@@ -30,7 +36,7 @@ def main(args):
     logger.setLevel(config.loglevel)
     matplot_logger.setLevel("WARNING")
 
-    win = GoULMainWindow()
+    win = MainWindow()
     win.show()
 
     sys.exit(app.exec())

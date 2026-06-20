@@ -61,13 +61,15 @@ class MainWindow(QMainWindow):
     def generate_state(self):
         logger.info("Generating new state...")
         self._stop_game()
-        self.cf.game.state = self.cf.game.get_init_state()
+        if self.cf.game:
+            self.cf.game.state = self.cf.game.get_init_state()
         self._plot()
 
     def _update_plot(self):
         logger.debug("Updating plot...")
         try:
-            next(self.cf.game)
+            if self.cf.game:
+                next(self.cf.game)
             self._plot()
         except StopIteration as error:
             logger.warning("Game ended, due to: %s", error)

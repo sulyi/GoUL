@@ -14,7 +14,6 @@ matplot_logger = logging.getLogger('matplotlib.font_manager')
 
 class GoULMainWindow(QMainWindow):
     tick = pyqtSignal()
-    game_types_changed = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)

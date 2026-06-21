@@ -47,8 +47,10 @@ class DeterministicGame(GameBase):
 
         return self.state
 
-    def get_init_state(self):
-        xdata = [random.randint(0, 10) for _ in range(self._INITIAL_POP_SIZE)]
-        ydata = [random.randint(0, 10) for _ in range(self._INITIAL_POP_SIZE)]
-
-        return GameState({(x, y) for x, y in zip(xdata, ydata)})
+    def get_init_state(
+            self,
+            height=GameBase._DEFAULT_INITIAL_HEIGHT,
+            width=GameBase._DEFAULT_INITIAL_WIDTH
+    ):
+        super().get_init_state()
+        return GameState.ramdom_state(height, width, self._INITIAL_POP_SIZE)

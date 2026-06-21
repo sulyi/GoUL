@@ -6,6 +6,11 @@ class GameBase(Iterator, ABC):
     _meta = {'imshow': {'cmap': 'binary'}}
     _name = None
 
+    _DEFAULT_INITIAL_HEIGHT = 10
+    _DEFAULT_INITIAL_WIDTH = 10
+
+    _INITIAL_POP_SIZE = 0
+
     # TODO: implement actual games:
     #  Monte-Carlo Extension
     #  Point Process Extension
@@ -23,11 +28,12 @@ class GameBase(Iterator, ABC):
 
     @abstractmethod
     def __next__(self):
-        """Return the next game state.
-        
-        Should raise StopIteration when game reaches terminal state.
-        """
+        ...
 
     @abstractmethod
-    def get_init_state(self):
-        """Get initial game state."""
+    def get_init_state(
+            self,
+            height=_DEFAULT_INITIAL_HEIGHT,
+            width=_DEFAULT_INITIAL_WIDTH
+    ):
+        ...

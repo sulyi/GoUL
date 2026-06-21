@@ -1,7 +1,7 @@
 from .conways_game_of_life import DeterministicGame
-from .game2 import Game2
+from .stochastic_game_of_life import StochasticGameOfLife
 
-_games = [DeterministicGame, Game2]
+_games = [DeterministicGame, StochasticGameOfLife]
 _game_lookup = {game.name(): game for game in _games}
 
 
